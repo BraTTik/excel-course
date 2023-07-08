@@ -1,0 +1,22 @@
+{
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "requireConfigFile": false
+  },
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true
+  },
+  "rules": {
+    "quotes": ["error","double"],
+    "semi": ["error", "always"],
+    "space-before-blocks": ["error", "always"],
+    "keyword-spacing": ["error"],
+    "space-infix-ops": ["error"],
+    "require-jsdoc": "off",
+//    "space-in-brackets": ["error", "never"]
+    "object-curly-spacing": ["error", "always"]
+  },
+  "extends": ["eslint:recommended", "google"]
+}
