@@ -15,6 +15,7 @@
     "keyword-spacing": ["error"],
     "space-infix-ops": ["error"],
     "require-jsdoc": "off",
+    "operator-linebreak": "off",
 //    "space-in-brackets": ["error", "never"]
     "object-curly-spacing": ["error", "always"]
   },
