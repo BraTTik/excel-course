@@ -14,6 +14,17 @@ class Dom {
     return this.$element.outerHTML.trim();
   }
 
+  text(content) {
+    if (typeof content === "string") {
+      this.$element.textContent = content;
+      return this;
+    }
+    if (this.$element.tagName.toLowerCase() === "input") {
+      return this.$element.value.trim();
+    }
+    return this.$element.textContent.trim();
+  }
+
   on(eventType, callback) {
     this.$element.addEventListener(eventType, callback);
   }
@@ -49,10 +60,41 @@ class Dom {
     return this.$element.querySelectorAll(selector);
   }
 
+  find(selector) {
+    return $(this.$element.querySelector(selector));
+  }
+
   css(styles = {}) {
     Object.keys(styles).forEach((key) => {
       this.$element.style[key] = styles[key];
     });
+  }
+
+  focus() {
+    this.$element.focus();
+    return this;
+  }
+
+  addClass(className) {
+    this.$element.classList.add(className);
+    return this;
+  }
+
+  removeClass(className) {
+    this.$element.classList.remove(className);
+    return this;
+  }
+
+  id(parse) {
+    if (parse) {
+      const id = this.id();
+      const [row = 0, col = 0] = id.split(":").map(Number);
+      return {
+        row,
+        col,
+      };
+    }
+    return this.data.id;
   }
 
   clear() {

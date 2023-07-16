@@ -5,3 +5,13 @@ export function capitalize(str) {
 
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+
+export function range(start, end) {
+  if (start > end) {
+    [end, start] = [start, end];
+  }
+  return new Array(end - start + 1)
+      .fill(0)
+      .map((_, index) => start + index);
+}
