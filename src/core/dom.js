@@ -15,7 +15,7 @@ class Dom {
   }
 
   text(content) {
-    if (typeof content === "string") {
+    if (typeof content !== "undefined") {
       this.$element.textContent = content;
       return this;
     }
@@ -70,9 +70,29 @@ class Dom {
     });
   }
 
+  getStyles(styles = []) {
+    return styles.reduce((res, style) => {
+      res[style] = this.$element.style[style];
+      return res;
+    }, {});
+  }
+
   focus() {
     this.$element.focus();
     return this;
+  }
+
+  value() {
+    return this.$element.value;
+  }
+
+  attr(name, value) {
+    if (value !== undefined) {
+      this.$element.setAttribute(name, value);
+      return this;
+    }
+
+    return this.$element.getAttribute(name);
   }
 
   addClass(className) {
