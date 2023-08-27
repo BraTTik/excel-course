@@ -7,7 +7,7 @@ export class StoreSubscriber {
     this.prevState = {};
   }
 
-  subscribeComponents(components) {
+  subscribeComponents = (components) => {
     this.prevState = this.store.getState();
 
     this.sub = this.store.subscribe((state) => {
@@ -23,9 +23,11 @@ export class StoreSubscriber {
       });
       this.prevState = this.store.getState();
     });
-  }
+  };
 
-  unsubscribeComponents() {
-    this.sub.unsubscribe();
-  }
+  unsubscribeComponents = () => {
+    if (this.sub) {
+      this.sub().unsubscribe();
+    }
+  };
 }

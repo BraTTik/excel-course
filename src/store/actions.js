@@ -2,7 +2,7 @@ import {
   TABLE_RESIZE,
   CHANGE_TEXT,
   CHANGE_STYLES,
-  APPLY_STYLES, CHANGE_TITLE,
+  APPLY_STYLES, CHANGE_TITLE, UPDATE_DATE,
 } from "@/store/types";
 
 export function tableResize(payload) {
@@ -17,6 +17,10 @@ export function changeText(payload) {
     type: CHANGE_TEXT,
     payload,
   };
+}
+
+export function updateDate() {
+  return { type: UPDATE_DATE };
 }
 
 export function changeStyles(payload) {

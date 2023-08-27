@@ -1,5 +1,5 @@
 // eslint-disable-next-line max-len
-import { TABLE_RESIZE, CHANGE_TEXT, CHANGE_STYLES, APPLY_STYLES, CHANGE_TITLE } from "./types";
+import { TABLE_RESIZE, CHANGE_TEXT, CHANGE_STYLES, APPLY_STYLES, CHANGE_TITLE, UPDATE_DATE } from "./types";
 
 export function rootReducer(state, action) {
   switch (action.type) {
@@ -41,6 +41,9 @@ export function rootReducer(state, action) {
     }
     case CHANGE_TITLE: {
       return { ...state, title: action.payload };
+    }
+    case UPDATE_DATE: {
+      return { ...state, openedDate: new Date().toJSON() };
     }
     default: {
       return state;
