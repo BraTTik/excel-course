@@ -4,6 +4,10 @@ import { tableResize } from "./table.resize";
 import { isCell, matrix, shouldResize, nextSelector } from "./table.helpers";
 import { TableSelection } from "./TableSelection";
 import { $ } from "@core/dom";
+import * as actions from "@/store/actions";
+import { defaultStyles } from "@/constants.ts";
+import { changeStyles } from "@/store/actions";
+import { parse } from "@core/parse";
 
 export class Table extends ExcelComponent {
   static className = "excel__table";
@@ -27,22 +31,39 @@ export class Table extends ExcelComponent {
     const $cell = this.$root.find("[data-id=\"0:0\"]");
     this.selectCell($cell);
 
-    this.$on("formula:input", (text) => {
-      this.selection.current.text(text);
+    this.$on("formula:input", (value) => {
+      const text = parse(value);
+
+      this.selection.current
+          .attr("data-value", value)
+          .text(text);
+      this.updateTextStore(value);
     });
 
     this.$on("formula:enter", () => {
       this.selection.current.focus();
     });
+
+    this.$on("toolbar:applyStyle", (value) => {
+      this.selection.applyStyle(value);
+      this.$dispatch(
+          actions.applyStyles({ value, ids: this.selection.selectedIds })
+      );
+    });
   }
 
   toHTML() {
-    return createTable(Table.rowsCount);
+    return createTable(Table.rowsCount, this.store.getState());
   }
+
+  resizeTable = async (event) => {
+    const payload = await tableResize(this.$root, event);
+    this.$dispatch(actions.tableResize(payload));
+  };
 
   onMousedown = (event) => {
     if (shouldResize(event)) {
-      tableResize(this.$root)(event);
+      this.resizeTable(event);
     } else if (isCell(event)) {
       const $target = $(event.target);
       if (event.shiftKey) {
@@ -53,8 +74,7 @@ export class Table extends ExcelComponent {
             .map((id) => this.$root.find(`[data-id="${id}"]`));
         this.selection.selectGroup($cells);
       } else {
-        this.selection.select($target);
-        this.$emit("table:select", $target);
+        this.selectCell($target);
       }
     }
   };
@@ -85,11 +105,20 @@ export class Table extends ExcelComponent {
   };
 
   onInput = (event) => {
-    this.$emit("table:input", $(event.target));
+    this.updateTextStore($(event.target).text());
   };
 
   selectCell = ($cell) => {
     this.selection.select($cell);
     this.$emit("table:select", $cell);
+    this.$dispatch(changeStyles($cell.getStyles(Object.keys(defaultStyles))));
+  };
+
+  updateTextStore = (text) => {
+    this.selection.current.text(parse(text));
+    this.$dispatch(actions.changeText({
+      id: this.selection.current.id(),
+      text,
+    }));
   };
 }
